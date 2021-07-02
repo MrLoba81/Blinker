@@ -1,2 +1,2 @@
 # Blinker
-A simple library implementing a non blocking, sync and async blinking
+A simple Arduino library implementing a non blocking, sync and async blinking
