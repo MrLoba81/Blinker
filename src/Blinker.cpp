@@ -4,36 +4,46 @@
 */
 #include "Blinker.h"
 
-Blinker::Blinker() {
+Blinker::Blinker()
+{
     this->highTime = 0;
     this->lowTime = 0;
     this->lastCheck = 0;
     this->status = LOW;
+    this->pin = 255;
 }
 
-void Blinker::setup(unsigned long millis, uint8_t pin) {
+void Blinker::setup(unsigned long millis, uint8_t pin)
+{
     this->setup(millis, millis, pin);
 }
 
-void Blinker::setup(unsigned long highTime, unsigned long lowTime, uint8_t pin) {
+void Blinker::setup(unsigned long highTime, unsigned long lowTime, uint8_t pin)
+{
     this->highTime = highTime;
     this->lowTime = lowTime;
     this->pin = pin;
     pinMode(pin, OUTPUT);
 }
 
-void Blinker::loop() {
+void Blinker::loop()
+{
     unsigned long elapsed = millis() - this->lastCheck;
-    
-    if (this->highTime == 0 || this->lowTime == 0)
-        this->status = 2;
-    
-    switch(this->status) {
+
+    if (this->pin != 255)
+    {
+        if (this->highTime == 0 || this->lowTime == 0)
+            this->status = 2;
+
+        switch (this->status)
+        {
         case 0: // HighCheck
-            if (elapsed >= this->highTime) this->status = 2;
+            if (elapsed >= this->highTime)
+                this->status = 2;
             break;
         case 1: // LowCheck
-            if (elapsed >= this->lowTime) this->status = 3;
+            if (elapsed >= this->lowTime)
+                this->status = 3;
             break;
         case 2: // Low
             this->lastCheck = millis();
@@ -45,20 +55,22 @@ void Blinker::loop() {
             digitalWrite(this->pin, HIGH);
             this->status = 0;
             break;
+        }
     }
 }
 
-void Blinker::blink() {
+void Blinker::blink()
+{
     this->status = 3;
 }
 
-void Blinker::blink(unsigned long millis) {
-    this->highTime = millis;
-    this->lowTime = millis;
-    this->blink();
+void Blinker::blink(unsigned long millis)
+{
+    this->blink(millis, millis);
 }
 
-void Blinker::blink(unsigned long highTime, unsigned long lowTime) {
+void Blinker::blink(unsigned long highTime, unsigned long lowTime)
+{
     this->highTime = highTime;
     this->lowTime = lowTime;
     this->blink();
