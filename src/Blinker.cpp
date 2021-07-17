@@ -24,6 +24,10 @@ void Blinker::setup(unsigned long highTime, unsigned long lowTime, uint8_t pin) 
 
 void Blinker::loop() {
     unsigned long elapsed = millis() - this->lastCheck;
+    
+    if (this->highTime == 0 || this->lowTime == 0)
+        this->status = 2;
+    
     switch(this->status) {
         case 0: // HighCheck
             if (elapsed >= this->highTime) this->status = 2;
